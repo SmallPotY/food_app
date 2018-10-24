@@ -1,0 +1,14 @@
+# coding=utf-8
+
+
+
+
+SERVER_PORT = 6666
+SERVER_HOST = '127.0.0.1'
+DEBUG = False
+
+SQLALCHEMY_ECHO = False
+SQLALCHEMY_ENCODING = 'utf-8'
+SQLALCHEMY_DATABASE_URI = 'sqlite:///database.db'
+
+SQLALCHEMY_TRACK_MODIFICATIONS = False
