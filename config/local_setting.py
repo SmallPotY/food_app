@@ -7,6 +7,10 @@ SERVER_HOST = '127.0.0.1'
 DEBUG = True
 
 
+# 页数显示
+PAGE_SIZE = 50
+PAGE_DISPLAY = 10
+
 AUTH_COOKIE_NAME = "MY_COOKIE"
 
 
@@ -28,7 +32,6 @@ SQLALCHEMY_TRACK_MODIFICATIONS = True
 IGNORE_URLS = [
     "^/user/login"
 ]
-
 
 IGNORE_CHECK_LOGIN_URLS=[
     "^/static",

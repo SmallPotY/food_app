@@ -71,7 +71,6 @@ def edit():
         return jsonify(resp)
 
     user_info = g.current_user
-    print(user_info)
     user_info.nickname = nickname
     user_info.email = email
     db.session.add(user_info)
@@ -80,10 +79,26 @@ def edit():
     return jsonify(resp)
 
 
-@route_user.route("/reset-pwd")
+@route_user.route("/reset-pwd",methods=['GET','POST'])
 def resetPwd():
-    return ops_render("user/reset_pwd.html")
+    if request.method =='GET':
+        return ops_render("user/reset_pwd.html")
+    resp ={'code':200,'msg':"操作成功",'data':{}}
+    req = request.values
+    new_password = req['new_password'] if req['new_password'] else ''
+    old_password = req['old_password'] if req['old_password'] else ''
 
+    if new_password !=old_password:
+        resp['code'] = -1
+        resp['msg'] =  '两次密码不一致,请重新输入'
+
+    user_info = g.current_user
+    user_info.login_pwd = UserService.genePwd(new_password,user_info.login_salt)
+
+    db.session.add(user_info)
+    db.session.commit()
+
+    return jsonify(resp)
 
 @route_user.route("/logout")
 def logout():
