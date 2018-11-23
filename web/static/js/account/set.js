@@ -31,6 +31,7 @@ var user_edit_ops = {
             var login_pwd_target = $("#login_pwd");
             var login_pwd = login_pwd_target.val();
 
+
             if (!nickname || nickname.length < 1) {
                 common_ops.tip("请输入姓名~~", nickname_target);
                 return false;
@@ -60,7 +61,8 @@ var user_edit_ops = {
                 email: email,
                 mobile: mobile,
                 login_name: login_name,
-                login_pwd: login_pwd
+                login_pwd: login_pwd,
+                id: $("#id").val()
             };
 
             $.ajax({

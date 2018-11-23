@@ -1,17 +1,20 @@
 # coding=utf-8
 
 
-
 SERVER_PORT = 8888
 SERVER_HOST = '127.0.0.1'
 DEBUG = True
-
 
 # 页数显示
 PAGE_SIZE = 50
 PAGE_DISPLAY = 10
 
+# cookie 密钥
 AUTH_COOKIE_NAME = "MY_COOKIE"
+
+
+# JS版本号
+# RELEASE_VERSION = '1.0'
 
 
 DIALECT = 'mysql'
@@ -23,17 +26,31 @@ PORT = '3306'
 DATABASE = 'food'
 SQLALCHEMY_ENCODING = 'utf-8'
 SQLALCHEMY_DATABASE_URI = "{}+{}://{}:{}@{}:{}/{}".format(DIALECT, DRIVER, USERNAME, PASSWORD, HOST,
-                                                                    PORT, DATABASE)
-SQLALCHEMY_ECHO = True
+                                                          PORT, DATABASE)
+SQLALCHEMY_ECHO = False
 SQLALCHEMY_TRACK_MODIFICATIONS = True
-
 
 ## 过滤url
 IGNORE_URLS = [
-    "^/user/login"
+    "^/user/login",
+    "^/api"
 ]
 
-IGNORE_CHECK_LOGIN_URLS=[
+IGNORE_CHECK_LOGIN_URLS = [
     "^/static",
     "^/favicon.ico"
 ]
+
+
+## 状态字段
+STATUS_MAPPING = {
+    "1": "正常",
+    "0": "无效"
+}
+
+
+# 小程序密钥
+MINA_APP = {
+    'AppID':'wx542fcc3a513f6b75',
+    'AppKey':'d07b6e7413cbe494c422c82d74b01e96'
+}

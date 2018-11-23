@@ -4,11 +4,13 @@ from flask import request, redirect, g
 from common.models.User import User
 from common.libs.user.UserService import UserService
 from common.libs.UrlManager import UrlManager
+from common.libs.LogSerrvice import LogService
 import re
 
 
 @app.before_request
 def before_request():
+    """路由拦截"""
     ignore_urls = app.config['IGNORE_URLS']
     ignore_check_login_urls = app.config['IGNORE_CHECK_LOGIN_URLS']
     path = request.path
@@ -21,6 +23,11 @@ def before_request():
     if user_info:
         g.current_user = user_info
 
+    # 登陆日志
+    LogService.addAccessLog()
+
+
+    # 静态文件不拦截
     pattern = re.compile('%s' % "|".join(ignore_urls))
     if pattern.match(path):
         return
@@ -52,5 +59,8 @@ def check_login():
 
     if auth_info[0] != UserService.geneAuthCode(user_info):
         return False
+
+    if user_info.status != 1:
+        return False    # 账号无效
 
     return user_info

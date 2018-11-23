@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import time
+from application import app
 
 class UrlManager(object):
     def __init__(self):
@@ -10,6 +12,8 @@ class UrlManager(object):
 
     @staticmethod
     def buildStaticUrl(path):
-        ver = "%s"%( 1 )
+        """每次请求都附加当前时间戳作为参数，重新加载js"""
+        release_version = app.config.get('RELEASE_VERSION')
+        ver = "%s"%( int(time.time()) ) if not release_version else release_version
         path =  "/static" + path + "?ver=" + ver
         return UrlManager.buildUrl( path )

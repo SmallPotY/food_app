@@ -1,9 +1,16 @@
 # coding=utf-8
+import datetime
+
 from flask import g, render_template
 
 
 def ops_render(template, context=None):
-    """统一渲染方法,改写render_template,附加g变量"""
+    """
+    统一渲染模板附加参数
+    :param template: 模板文件
+    :param context: 附加参数
+    :return: 模板文件
+    """
 
     if context is None:
         context = {}
@@ -15,7 +22,11 @@ def ops_render(template, context=None):
 
 
 def iPagination( params ):
-    """统一分页方法"""
+    """
+    返回分页对象
+    :param params:
+    :return:
+    """
     import math
 
     ret = {
@@ -60,3 +71,12 @@ def iPagination( params ):
     ret['total'] = total
     ret['range'] = range( ret['from'],ret['end'] + 1 )
     return ret
+
+
+def getCurrenDate(datetime_format="%Y-%m-%d %H:%M:%S"):
+    """
+    获取当前时间格式化字符串
+    :param datetime_format: 返回格式
+    :return: 时间字符串
+    """
+    return datetime.datetime.now().strftime(datetime_format)
