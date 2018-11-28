@@ -74,6 +74,9 @@ def set():
         if not info:
             return redirect(UrlManager.buildUrl("/member/index"))
 
+        if info.status!=1:
+            return redirect(UrlManager.buildUrl("/member/index"))
+
         resp['info'] = info
         return ops_render("member/set.html", resp)
 

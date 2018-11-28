@@ -4,7 +4,7 @@ from flask import request, redirect, g
 from common.models.User import User
 from common.libs.user.UserService import UserService
 from common.libs.UrlManager import UrlManager
-from common.libs.LogSerrvice import LogService
+from common.libs.LogService import LogService
 import re
 
 

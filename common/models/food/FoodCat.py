@@ -1,27 +1,20 @@
 # coding: utf-8
-from sqlalchemy import Column, DateTime, Integer, Numeric, String
-from sqlalchemy.schema import FetchedValue
-from flask_sqlalchemy import SQLAlchemy
+from application import db, app
 
 
-db = SQLAlchemy()
 
 
-class Food(db.Model):
-    __tablename__ = 'food'
+class FoodCat(db.Model):
+    __tablename__ = 'food_cat'
 
-    id = db.Column(db.Integer, primary_key=True)
-    cat_id = db.Column(db.Integer, nullable=False, server_default=db.FetchedValue())
-    name = db.Column(db.String(100), nullable=False, server_default=db.FetchedValue())
-    price = db.Column(db.Numeric(10, 2), nullable=False, server_default=db.FetchedValue())
-    main_image = db.Column(db.String(100), nullable=False, server_default=db.FetchedValue())
-    summary = db.Column(db.String(10000), nullable=False, server_default=db.FetchedValue())
-    stock = db.Column(db.Integer, nullable=False, server_default=db.FetchedValue())
-    tags = db.Column(db.String(200), nullable=False, server_default=db.FetchedValue())
+    id = db.Column(db.Integer, primary_key=True, unique=True)
+    name = db.Column(db.String(50), nullable=False, server_default=db.FetchedValue())
+    weight = db.Column(db.Integer, nullable=False, server_default=db.FetchedValue())
     status = db.Column(db.Integer, nullable=False, server_default=db.FetchedValue())
-    month_count = db.Column(db.Integer, nullable=False, server_default=db.FetchedValue())
-    total_count = db.Column(db.Integer, nullable=False, server_default=db.FetchedValue())
-    view_count = db.Column(db.Integer, nullable=False, server_default=db.FetchedValue())
-    comment_count = db.Column(db.Integer, nullable=False, server_default=db.FetchedValue())
     updated_time = db.Column(db.DateTime, nullable=False, server_default=db.FetchedValue())
     created_time = db.Column(db.DateTime, nullable=False, server_default=db.FetchedValue())
+
+
+    @property
+    def status_desc(self):
+        return app.config['STATUS_MAPPING'][str(self.status)]
