@@ -152,6 +152,12 @@ var common_ops = {
             _parmUrl = "?" + _parmUrl;
         }
         return url + _parmUrl;
+    },
+
+    buildPicUrl: function (img_key) {
+        var domain = $("#app_domain").val();
+        var prefix_url = $("#app_prefix_url").val();
+        return domain + prefix_url + img_key;
     }
 };
 

@@ -17,7 +17,7 @@
                 <li class="nav-header">
                     <div class="profile-element text-center">
                         <img alt="image" class="img-circle" src="{{ buildStaticUrl('/images/common/logo.png') }}"/>
-                        <p class="text-muted">编程浪子</p>
+                        <p class="text-muted">吕食阿未</p>
                     </div>
                     <div class="logo-element">
                         <img alt="image" class="img-circle" src="{{ buildStaticUrl('/images/common/logo.png') }}"/>
@@ -61,7 +61,7 @@
                 <ul class="nav navbar-top-links navbar-right">
                     <li>
 						<span class="m-r-sm text-muted welcome-message">
-                            欢迎使用编程浪子订餐管理管理后台
+                            欢迎您, {{ current_user.nickname }}
                         </span>
                     </li>
                     <li class="dropdown user_info">
@@ -100,6 +100,12 @@
         </div>
         {% block content %}{% endblock %}
     </div>
+</div>
+
+
+<div class="hidden hidden_layout_wrap">
+    <input name="'domain" id="app_domain" value="{{ config.APP.domain }}">
+    <input name="'prefix_url" id="app_prefix_url" value="{{ config.UPLOAD.prefix_url }}">
 </div>
 
 <script src="{{ buildStaticUrl('/plugins/jquery-2.1.1.js') }}"></script>

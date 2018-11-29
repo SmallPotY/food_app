@@ -1,8 +1,11 @@
 # coding=utf-8
 from flask import Blueprint, request, jsonify
 from application import app, db
-import json, re
+import json
+import re
 from common.libs.UploadService import UploadService
+from common.libs.UrlManager import UrlManager
+from common.models.Images import Images
 
 route_upload = Blueprint('upload_page', __name__)
 
@@ -25,19 +28,66 @@ def ueditor():
 
     if action == 'uploadimage':
         return upload_image()
+
+    if action == 'listimage':
+        return list_image()
     return 'ueditor'
+
+
+@route_upload.route('/pic', methods=['GET', 'POST'])
+def upload_pic():
+    file_target = request.files
+    upfile = file_target['pic'] if 'pic' in file_target else None
+
+    callback_target = "window.parent.upload"
+    if upfile is None:
+        return "<script>{0}.error('{1}')</script>".format(callback_target, '上传失败')
+    ret = UploadService.upload_by_file(upfile)
+    if ret['code'] != 200:
+        return "<script>{0}.error('{1}')</script>".format(callback_target, '上传失败' + ret['msg'])
+
+    return "<script>{0}.success('{1}')</script>".format(callback_target, ret['data']['file_key'])
 
 
 def upload_image():
     resp = {'state': 'SUCCESS', 'url': '', 'title': '', 'original': ''}
 
-    file_target = request.files     # 获取上传文件
+    file_target = request.files  # 获取上传文件
     upfile = file_target['upfile'] if 'upfile' in file_target else None
 
     if upfile is None:
         resp['state'] = '上传失败'
         return jsonify(resp)
 
-    ret =UploadService
+    ret = UploadService.upload_by_file(upfile)
 
+    if ret['code'] != 200:
+        resp['state'] = "上传失败:" + ret['msg']
+        return jsonify(resp)
+    resp['url'] = UrlManager.build_image_url(ret['data']['file_key'])
+    return jsonify(resp)
+
+
+def list_image():
+    resp = {'state': 'SUCCESS', 'list': [], 'start': 0, 'total': 0}
+
+    req = request.values
+
+    start = int(req['start']) if 'start' in req else 0
+    page_size = int(req['size']) if 'size' in req else 20
+
+    query = Images.query
+    if start > 0:
+        query = query.filter(Images.id < start)
+
+    list_images = query.order_by(Images.id.desc()).limit(page_size).all()
+    images = []
+    if list:
+        for item in list_images:
+            images.append({'url': UrlManager.build_image_url(item.file_key)})
+            start = item.id
+
+    resp['list'] = images
+    resp['start'] = start
+    resp['total'] = len(images)
     return jsonify(resp)
