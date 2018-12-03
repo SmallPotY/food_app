@@ -1,5 +1,7 @@
 # coding: utf-8
-from application import db, app
+from sqlalchemy import Column, DateTime, Integer, String
+from sqlalchemy.schema import FetchedValue
+from application import db,app
 
 
 class Member(db.Model):
@@ -18,13 +20,13 @@ class Member(db.Model):
 
     @property
     def status_desc(self):
-        return app.config['STATUS_MAPPING'][str(self.status)]
+        return app.config['STATUS_MAPPING'][ str( self.status ) ]
 
     @property
     def sex_desc(self):
         sex_mapping = {
-            "0": "未知",
-            "1": "男",
-            "2": "女"
+            "0":"未知",
+            "1":"男",
+            "2":"女"
         }
         return sex_mapping[str(self.sex)]

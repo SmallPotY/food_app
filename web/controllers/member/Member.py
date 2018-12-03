@@ -74,7 +74,7 @@ def set():
         if not info:
             return redirect(UrlManager.buildUrl("/member/index"))
 
-        if info.status!=1:
+        if info.status != 1:
             return redirect(UrlManager.buildUrl("/member/index"))
 
         resp['info'] = info
@@ -106,7 +106,7 @@ def comment():
     return ops_render("member/comment.html")
 
 
-@route_member.route("/ops",methods=['POST'])
+@route_member.route("/ops", methods=['POST'])
 def ops():
     resp = {'code': 200, 'msg': '操作成功~', 'data': {}}
     req = request.values
@@ -114,13 +114,12 @@ def ops():
     id = req['id'] if 'id' in req else 0
     act = req['act'] if 'act' in req else ''
 
-
-    if not id :
+    if not id:
         resp['code'] = -1
         resp['msg'] = "请选择操作账号~~"
         return jsonify(resp)
 
-    if act not in ['remove','recover']:
+    if act not in ['remove', 'recover']:
         resp['code'] = -1
         resp['msg'] = "操作有误，请重试~~"
         return jsonify(resp)
@@ -143,3 +142,9 @@ def ops():
 
     return jsonify(resp)
 
+
+@route_member.route('/member/share', methods=['GET', 'POST'])
+def member_share():
+    resp = {'code': 200, 'msg': '操作成功~', 'data': {}}
+    req = request.values
+    return jsonify(resp)

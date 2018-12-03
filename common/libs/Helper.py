@@ -84,11 +84,6 @@ def getCurrenDate(datetime_format="%Y-%m-%d %H:%M:%S"):
 def getDictFilterField(db_model, select_filed, key_field, id_list):
     """
     根据某个字段获取一个dic
-    :param db_model:
-    :param select_filed:
-    :param key_field:
-    :param id_list:
-    :return:
     """
     ret = {}
     query = db_model.query
@@ -99,9 +94,8 @@ def getDictFilterField(db_model, select_filed, key_field, id_list):
     if not list:
         return ret
 
-
     for item in list:
-        if not hasattr(item, key_field ):
+        if not hasattr(item, key_field):
             break
         ret[getattr(item, key_field)] = item
     return ret

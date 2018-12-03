@@ -8,22 +8,22 @@ Page({
     userInfo: {},
     regFlag: true
   },
-  goToIndex: function() {
+  goToIndex: function () {
     wx.switchTab({
       url: '/pages/food/index',
     });
   },
-  onLoad: function() {
+  onLoad: function () {
     wx.setNavigationBarTitle({
       title: app.globalData.shopName
     })
-    
+    this.checkLogin();
   },
 
-  checkLogin: function() {
+  checkLogin: function () {
     var that = this;
     wx.login({
-      success: function(res) {
+      success: function (res) {
         if (!res.code) {
           app.alert({
             'content': '登陆失败,再试一次呗~'
@@ -37,14 +37,15 @@ Page({
           data: {
             code: res.code
           },
-          success: function(res) {
+          success: function (res) {
             if (res.data.code != 200) {
               that.setData({
                 regFlag: false
               });
               return;
             }
-            that.goToIndex();
+            app.setCache("token", res.data.data.token);
+            // that.goToIndex();
           }
         })
 
@@ -54,17 +55,17 @@ Page({
   },
 
 
-  onShow: function() {
+  onShow: function () {
 
   },
-  onReady: function() {
+  onReady: function () {
     var that = this;
-    setTimeout(function() {
+    setTimeout(function () {
       that.setData({
         remind: ''
       });
     }, 1000);
-    wx.onAccelerometerChange(function(res) {
+    wx.onAccelerometerChange(function (res) {
       var angle = -(res.x * 30).toFixed(1);
       if (angle > 14) {
         angle = 14;
@@ -77,10 +78,10 @@ Page({
         });
       }
     });
-    this.checkLogin();
   },
 
-  login: function(e) {
+
+  login: function (e) {
     var that = this;
     if (!e.detail.userInfo) {
       app.alert({
@@ -93,13 +94,9 @@ Page({
     var data = e.detail.userInfo;
 
     wx.login({
-
-      success: function(res) {
-
+      success: function (res) {
         if (!res.code) {
-          app.alert({
-            'content': '登陆验证失败，再试一次呗~'
-          });
+          app.alert({ 'content': '登陆验证失败，再试一次呗~' });
           return;
         }
         data['code'] = res.code;
@@ -108,11 +105,9 @@ Page({
           header: app.getRequestHeader(),
           method: 'POST',
           data: data,
-          success: function(res) {
+          success: function (res) {
             if (res.data.code != 200) {
-              app.alert({
-                'content': res.msg
-              });
+              app.alert({ 'content': res.msg });
               return;
             }
             app.setCache('token', res.data.data.token);

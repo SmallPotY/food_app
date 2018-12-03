@@ -1,6 +1,6 @@
 # coding=utf-8
 from web.controllers.api import route_api
-from flask import request, jsonify
+from flask import request, jsonify,g
 from application import app, db
 import requests
 import json
@@ -8,7 +8,7 @@ from common.models.member.Member import Member
 from common.models.member.OauthMemberBind import OauthMemberBind
 from common.libs.Helper import getCurrenDate
 from common.libs.member.MemberService import MemberService
-
+from common.models.WxShareHistory import WxShareHistory
 
 @route_api.route("/member/login", methods=['GET', 'POST'])
 def login():
@@ -95,4 +95,23 @@ def checkReg():
 
     token = "{}#{}".format(MemberService.geneAuthCode(member_info),member_info.id)
     resp['data'] = {'token':token}
+    return jsonify(resp)
+
+
+@route_api.route('/member/share',methods=['POST'])
+def member_share():
+    resp = {'code':200,'msg':'操作成功','data':{}}
+    req = request.values
+
+    url = req['url'] if 'url' in req else ''
+    member_info = g.member_info
+
+    model_share = WxShareHistory()
+
+    if member_info:
+        model_share.member_id = member_info.id
+    model_share.share_url = url
+    model_share.created_time=getCurrenDate()
+    db.session.add(model_share)
+    db.session.commit()
     return jsonify(resp)

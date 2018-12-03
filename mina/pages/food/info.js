@@ -2,6 +2,7 @@
 //获取应用实例
 var app = getApp();
 var WxParse = require('../../wxParse/wxParse.js');
+var utils = require('../../utils/util.js');
 
 Page({
     data: {
@@ -12,75 +13,64 @@ Page({
         hideShopPopup: true,
         buyNumber: 1,
         buyNumMin: 1,
-        buyNumMax:1,
+        buyNumMax: 1,
         canSubmit: false, //  选中时候是否允许加入购物车
         shopCarInfo: {},
-        shopType: "addShopCar",//购物类型，加入购物车或立即购买，默认为加入购物车,
+        shopType: "addShopCar", //购物类型，加入购物车或立即购买，默认为加入购物车,
         id: 0,
         shopCarNum: 4,
-        commentCount:2
+        commentCount: 2
     },
-    onLoad: function () {
+    onLoad: function(e) {
         var that = this;
 
         that.setData({
-            "info": {
-                "id": 1,
-                "name": "小鸡炖蘑菇",
-                "summary": '<p>多色可选的马甲</p><p><img src="http://www.timeface.cn/uploads/times/2015/07/071031_f5Viwp.jpg"/></p><p><br/>相当好吃了</p>',
-                "total_count": 2,
-                "comment_count": 2,
-                "stock": 2,
-                "price": "80.00",
-                "main_image": "/images/food.jpg",
-                "pics": [ '/images/food.jpg','/images/food.jpg' ]
-            },
-            buyNumMax:2,
-            commentList: [
-                {
-                    "score": "好评",
-                    "date": "2017-10-11 10:20:00",
-                    "content": "非常好吃，一直在他们加购买",
-                    "user": {
-                        "avatar_url": "/images/more/logo.png",
-                        "nick": "angellee 🐰 🐒"
-                    }
-                },
-                {
-                    "score": "好评",
-                    "date": "2017-10-11 10:20:00",
-                    "content": "非常好吃，一直在他们加购买",
-                    "user": {
-                        "avatar_url": "/images/more/logo.png",
-                        "nick": "angellee 🐰 🐒"
-                    }
-                }
-            ]
-        });
+            id: e.id
+        })
 
-        WxParse.wxParse('article', 'html', that.data.info.summary, that, 5);
+        this.getInfo();
+
     },
-    goShopCar: function () {
+    goShopCar: function() {
         wx.reLaunch({
             url: "/pages/cart/index"
         });
     },
-    toAddShopCar: function () {
+    toAddShopCar: function() {
         this.setData({
             shopType: "addShopCar"
         });
         this.bindGuiGeTap();
     },
-    tobuy: function () {
+    tobuy: function() {
         this.setData({
             shopType: "tobuy"
         });
         this.bindGuiGeTap();
     },
-    addShopCar: function () {
 
+    addShopCar: function() {
+        var that = this;
+        var data = {
+            'id':this.data.info.id,
+            'number':this.data.buyNumber
+        };
+        wx.request({
+            url:app.buildUrl('/cart/set'),
+            header:app.getRequestHeader(),
+            method:'POST',
+            data:data,
+            success:function(res){
+                var resp = res.data;
+                app.alert({'content':resp.msg});
+                that.setData({
+                    hideShopPopup:true
+                })
+            }
+        })
     },
-    buyNow: function () {
+
+    buyNow: function() {
         wx.navigateTo({
             url: "/pages/order/index"
         });
@@ -88,7 +78,7 @@ Page({
     /**
      * 规格选择弹出框
      */
-    bindGuiGeTap: function () {
+    bindGuiGeTap: function() {
         this.setData({
             hideShopPopup: false
         })
@@ -96,13 +86,13 @@ Page({
     /**
      * 规格选择弹出框隐藏
      */
-    closePopupTap: function () {
+    closePopupTap: function() {
         this.setData({
             hideShopPopup: true
         })
     },
-    numJianTap: function () {
-        if( this.data.buyNumber <= this.data.buyNumMin){
+    numJianTap: function() {
+        if (this.data.buyNumber <= this.data.buyNumMin) {
             return;
         }
         var currentNum = this.data.buyNumber;
@@ -111,8 +101,8 @@ Page({
             buyNumber: currentNum
         });
     },
-    numJiaTap: function () {
-        if( this.data.buyNumber >= this.data.buyNumMax ){
+    numJiaTap: function() {
+        if (this.data.buyNumber >= this.data.buyNumMax) {
             return;
         }
         var currentNum = this.data.buyNumber;
@@ -122,9 +112,69 @@ Page({
         });
     },
     //事件处理函数
-    swiperchange: function (e) {
+    swiperchange: function(e) {
         this.setData({
             swiperCurrent: e.detail.current
         })
-    }
+    },
+
+    getInfo: function() {
+        var that = this;
+
+        wx.request({
+            url: app.buildUrl('/food/info'),
+            data: {
+                id: that.data.id
+            },
+            header: app.getRequestHeader(),
+            method: 'GET',
+            dataType: 'json',
+            responseType: 'text',
+            success: function(res) {
+                var resp = res.data;
+                if (resp.code != 200) {
+                    app.alert({
+                        "content": resp.msg
+                    });
+                    return;
+                }
+                that.setData({
+                    info: resp.data.info,
+                    buyNumMax: resp.data.info.stock,
+                    shopCarNum:resp.data.cart_number
+                });
+                WxParse.wxParse('article', 'html', that.data.info.summary, that, 5)
+            },
+
+        });
+    },
+
+
+    onShareAppMessage: function() {
+        var that = this;
+        return {
+            title: that.data.info.name,
+            path: '/page/user?id=' + that.data.info.id,
+            success: function(res) {
+                // 转发成功
+                wx.request({
+                    url:app.buildUrl('/member/share'),
+                    header:app.getRequestHeader(),
+                    method:'POST',
+                    data:{
+                        url:utils.getCurrentPageUrlWithArgs()
+                    },
+                    success:function(){
+
+                    }
+                })
+            },
+            fail: function(res) {
+                //转发失败
+            }
+        }
+    },
+
+
+
 });

@@ -4,6 +4,7 @@ from application import app
 # 拦截器
 from web.interceptors.Authlnterceptor import *
 from web.interceptors.ErrorInterceptory import *
+from web.interceptors.ApiAuthlnterceptor import  *
 
 # 蓝图
 from web.controllers.index import route_index

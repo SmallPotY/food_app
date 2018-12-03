@@ -32,6 +32,11 @@ def before_request():
     if pattern.match(path):
         return
 
+
+    if '/api' in path:
+        return
+
+
     if not user_info:
         return redirect(UrlManager.buildUrl('/user/login'))
     return
