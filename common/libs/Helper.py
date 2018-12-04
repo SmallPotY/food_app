@@ -88,7 +88,7 @@ def getDictFilterField(db_model, select_filed, key_field, id_list):
     ret = {}
     query = db_model.query
     if id_list and len(id_list) > 0:
-        query = query.filter_by(select_filed.in_(id_list))
+        query = query.filter(select_filed.in_(id_list))
 
     list = query.all()
     if not list:
@@ -99,3 +99,19 @@ def getDictFilterField(db_model, select_filed, key_field, id_list):
             break
         ret[getattr(item, key_field)] = item
     return ret
+
+
+def selectFilterObj(obj, field):
+    """
+    获取对象属性
+    :param obj:
+    :param field:
+    :return:
+    """
+    ret = []
+    for item in obj:
+        if not hasattr(item, field):
+            continue
+        if getattr(item, field) in ret:
+            continue
+        ret.append(getattr(item, field))

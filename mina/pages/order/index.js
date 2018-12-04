@@ -11,24 +11,49 @@ Page({
         params: null
     },
 
-    onShow: function () {
-        var that = this;
-        this.getOrderInfo();
-    },
     onLoad: function (e) {
         var that = this;
         that.setData({
-            params:JSON.parse(e.data)
+            params: JSON.parse(e.data)
         });
-        
+
     },
-    
+
+    onShow: function () {
+        var that = this;
+        this.getOrderInfo();
+
+    },
+
+
     createOrder: function (e) {
         wx.showLoading();
         var that = this;
-        wx.navigateTo({
-            url: "/pages/my/order_list"
+
+        var data = {
+            type: this.data.params.type,
+            goods: JSON.stringify(this.data.params.goods)
+        };
+
+        wx.request({
+            url: app.buildUrl('/order/create'),
+            header: app.getRequestHeader(),
+            method: 'POST',
+            data: data,
+            success: function (res) {
+                wx.hideLoading();
+                var resp = res.data;
+                if (resp.code != 200) {
+                    app.alert({ "content": resp.msg });
+                    return;
+                }
+                wx.navigateTo({
+                    url: "/pages/my/order_list"
+                });
+            }
         });
+
+
     },
 
     addressSet: function () {
@@ -36,36 +61,36 @@ Page({
             url: "/pages/my/addressSet"
         });
     },
+
     selectAddress: function () {
         wx.navigateTo({
             url: "/pages/my/addressList"
         });
     },
 
-    getOrderInfo:function(){
+    getOrderInfo: function () {
         var that = this;
         var data = {
-            type:this.data.params.type,
-            goods:JSON.stringify(this.data.params.goods)
+            type: this.data.params.type,
+            goods: JSON.stringify(this.data.params.goods)
         };
-
         wx.request({
             url: app.buildUrl('/order/info'),
             data: data,
             header: app.getRequestHeader(),
             method: 'POST',
-            success:function(res){
+            success: function (res) {
                 var resp = res.data
-                if(resp.code !=200){
-                    app.alert({'content':resp.msg});
+                if (resp.code != 200) {
+                    app.alert({ 'content': resp.msg });
                     return;
                 }
                 that.setData({
-                    goods_list:resp.data.food_list,
-                    default_address:resp.data.default_address,
-                    yun_price:resp.data.yun_price,
-                    pay_price:resp.data.pay_price,
-                    total_price:resp.data.total_price
+                    goods_list: resp.data.food_list,
+                    default_address: resp.data.default_address,
+                    yun_price: resp.data.yun_price,
+                    pay_price: resp.data.pay_price,
+                    total_price: resp.data.total_price
                 })
 
             }

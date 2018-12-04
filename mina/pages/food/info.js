@@ -21,7 +21,7 @@ Page({
         shopCarNum: 4,
         commentCount: 2
     },
-    onLoad: function(e) {
+    onLoad: function (e) {
         var that = this;
 
         that.setData({
@@ -31,54 +31,65 @@ Page({
         this.getInfo();
 
     },
-    goShopCar: function() {
+    goShopCar: function () {
         wx.reLaunch({
             url: "/pages/cart/index"
         });
     },
-    toAddShopCar: function() {
+    toAddShopCar: function () {
         this.setData({
             shopType: "addShopCar"
         });
         this.bindGuiGeTap();
     },
-    tobuy: function() {
+    tobuy: function () {
         this.setData({
             shopType: "tobuy"
         });
         this.bindGuiGeTap();
     },
 
-    addShopCar: function() {
+    addShopCar: function () {
         var that = this;
         var data = {
-            'id':this.data.info.id,
-            'number':this.data.buyNumber
+            'id': this.data.info.id,
+            'number': this.data.buyNumber
         };
         wx.request({
-            url:app.buildUrl('/cart/set'),
-            header:app.getRequestHeader(),
-            method:'POST',
-            data:data,
-            success:function(res){
+            url: app.buildUrl('/cart/set'),
+            header: app.getRequestHeader(),
+            method: 'POST',
+            data: data,
+            success: function (res) {
                 var resp = res.data;
-                app.alert({'content':resp.msg});
+                app.alert({ 'content': resp.msg });
                 that.setData({
-                    hideShopPopup:true
+                    hideShopPopup: true
                 })
             }
         })
     },
 
-    buyNow: function() {
+    buyNow: function () {
+        var data = {
+            goods: [{
+                "id": this.data.info.id,
+                "price": this.data.info.price,
+                "number": this.data.buyNumber
+            }]
+        }
+        this.setData({
+            hideShopPopup: true
+        })
         wx.navigateTo({
-            url: "/pages/order/index"
+            url: "/pages/order/index?data=" + JSON.stringify(data)
         });
+
     },
     /**
      * 规格选择弹出框
      */
-    bindGuiGeTap: function() {
+    bindGuiGeTap: function () {
         this.setData({
             hideShopPopup: false
         })
@@ -86,12 +97,12 @@ Page({
     /**
      * 规格选择弹出框隐藏
      */
-    closePopupTap: function() {
+    closePopupTap: function () {
         this.setData({
             hideShopPopup: true
         })
     },
-    numJianTap: function() {
+    numJianTap: function () {
         if (this.data.buyNumber <= this.data.buyNumMin) {
             return;
         }
@@ -101,7 +112,7 @@ Page({
             buyNumber: currentNum
         });
     },
-    numJiaTap: function() {
+    numJiaTap: function () {
         if (this.data.buyNumber >= this.data.buyNumMax) {
             return;
         }
@@ -112,13 +123,13 @@ Page({
         });
     },
     //事件处理函数
-    swiperchange: function(e) {
+    swiperchange: function (e) {
         this.setData({
             swiperCurrent: e.detail.current
         })
     },
 
-    getInfo: function() {
+    getInfo: function () {
         var that = this;
 
         wx.request({
@@ -130,7 +141,7 @@ Page({
             method: 'GET',
             dataType: 'json',
             responseType: 'text',
-            success: function(res) {
+            success: function (res) {
                 var resp = res.data;
                 if (resp.code != 200) {
                     app.alert({
@@ -141,7 +152,7 @@ Page({
                 that.setData({
                     info: resp.data.info,
                     buyNumMax: resp.data.info.stock,
-                    shopCarNum:resp.data.cart_number
+                    shopCarNum: resp.data.cart_number
                 });
                 WxParse.wxParse('article', 'html', that.data.info.summary, that, 5)
             },
@@ -150,26 +161,26 @@ Page({
     },
 
 
-    onShareAppMessage: function() {
+    onShareAppMessage: function () {
         var that = this;
         return {
             title: that.data.info.name,
             path: '/page/user?id=' + that.data.info.id,
-            success: function(res) {
+            success: function (res) {
                 // 转发成功
                 wx.request({
-                    url:app.buildUrl('/member/share'),
-                    header:app.getRequestHeader(),
-                    method:'POST',
-                    data:{
-                        url:utils.getCurrentPageUrlWithArgs()
+                    url: app.buildUrl('/member/share'),
+                    header: app.getRequestHeader(),
+                    method: 'POST',
+                    data: {
+                        url: utils.getCurrentPageUrlWithArgs()
                     },
-                    success:function(){
+                    success: function () {
 
                     }
                 })
             },
-            fail: function(res) {
+            fail: function (res) {
                 //转发失败
             }
         }

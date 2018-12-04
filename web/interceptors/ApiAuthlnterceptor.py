@@ -39,14 +39,13 @@ def before_request():
 def check_member_login():
     """登陆验证"""
     auth_cookie = request.headers.get('Authorization')
-    print('auth_cookie',auth_cookie)
+
     if auth_cookie is None:
         return False  # 没有cookie
 
     auth_info = auth_cookie.split('#')
     if len(auth_info) != 2:
         return False  # cookie不符
-
 
     try:
         member_info = Member.query.filter_by(id=auth_info[1]).first()

@@ -1,10 +1,13 @@
 <!--index.wxml-->
 <view class="container">
-    <view class="title-box">
-        购物车空空如也～
-    </view>
-    <view class="to-index-btn" bindtap="toIndexPage">
-        去逛逛
+
+    <view wx:if="{{ list.length==0 }}">
+        <view class="title-box">
+            购物车空空如也～
+        </view>
+        <view class="to-index-btn" bindtap="toIndexPage">
+            去逛逛
+        </view>
     </view>
 
     <view class="list-top" wx:if="{{ list }}">
