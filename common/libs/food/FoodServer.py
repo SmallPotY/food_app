@@ -2,7 +2,7 @@
 from application import db
 from common.models.food.FoodStockChangeLog import FoodStockChangeLog
 from common.models.food.Food import Food
-from common.libs.Helper import getCurrenDate
+from common.libs.Helper import getCurrentDate
 
 
 class FoodService():
@@ -22,7 +22,7 @@ class FoodService():
         model_stock_change.unit = quantity
         model_stock_change.total_stock = food_info.stock
         model_stock_change.note=note
-        model_stock_change.created_time = getCurrenDate()
+        model_stock_change.created_time = getCurrentDate()
 
         db.session.add(model_stock_change)
         db.session.commit()

@@ -72,7 +72,7 @@ def iPagination(params):
     return ret
 
 
-def getCurrenDate(datetime_format="%Y-%m-%d %H:%M:%S"):
+def getCurrentDate(datetime_format="%Y-%m-%d %H:%M:%S"):
     """
     获取当前时间格式化字符串
     :param datetime_format: 返回格式
@@ -110,8 +110,9 @@ def selectFilterObj(obj, field):
     """
     ret = []
     for item in obj:
-        if not hasattr(item, field):
+        if not hasattr(item, field ):
+            break
+        if getattr( item,field )  in ret:
             continue
-        if getattr(item, field) in ret:
-            continue
-        ret.append(getattr(item, field))
+        ret.append( getattr( item,field ) )
+    return ret

@@ -16,7 +16,7 @@
   </view>
 
   <view style="height:20rpx;background: #eee;width:100%;"></view>
-  <view class="version">Powered by 编程浪子</view>
+  <view class="version">Powered by SmallPotY</view>
   <view style="height:20rpx;background: #eee;width:100%;"></view>
 
 </view>

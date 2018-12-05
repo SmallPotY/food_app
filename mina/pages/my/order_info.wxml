@@ -6,11 +6,11 @@
                 <image wx:elif="{{info.status==-8}}" class="icon" src="/images/order/icon-ddfk.png"></image>
                 <image wx:elif="{{info.status==-7}}" class="icon" src="/images/order/icon-ddfh.png"></image>
                 <image wx:elif="{{info.status== -6}}" class="icon" src="/images/order/icon-ddsh.png"></image>
-                <image wx:elif="{{info.status== 1 || info.status== -5}}" class="icon" src="/images/order-details/icon-jycg.png"></image>
+                <image wx:elif="{{info.status== 1 || info.status== -5}}" class="icon" src="/images/order/icon-jycg.png"></image>
             </view>
             <view class="right-text">
                 <view class="status red">{{info.status_desc}}</view>
-                <view class="des">请于{{ info.deadline }}前付款，超时订单将自动关闭</view>
+                <view class="des" wx:if="{{info.status==-8}}">请于{{ info.deadline }}前付款，超时订单将自动关闭</view>
             </view>
         </view>
         <block>
@@ -19,7 +19,7 @@
                   <image class="icon" src="/images/order/icon-address.png"></image>
               </view>
               <view class="right-box">
-                  <view class="name-tel">{{info.address.name}}  {{info.address.mobile}}</view>
+                  <view class="name-tel">{{info.address.nickname}}  {{info.address.mobile}}</view>
                   <view class="text">
                       {{info.address.address}}
                   </view>
@@ -46,9 +46,9 @@
                     </view>
                 </view>
             </block>
-        <view class="btn-row">
-              <button class="confirm-btn" data-id="{{info.order_sn}}">确认收货</button>
-        </view>
+            <view class="btn-row" wx:if="{{info.status== -6}}">
+                  <button class="confirm-btn" data-id="{{info.order_sn}}">确认收货</button>
+            </view>
     </view>
     <view class="goods-info">
         <view class="row-box">

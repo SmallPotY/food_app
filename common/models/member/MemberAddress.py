@@ -1,6 +1,4 @@
 # coding: utf-8
-from sqlalchemy import Column, DateTime, Index, Integer, String
-from sqlalchemy.schema import FetchedValue
 from application import db
 
 class MemberAddress(db.Model):

@@ -1,7 +1,7 @@
 # coding=utf-8
 from werkzeug.utils import secure_filename
 from application import app, db
-from common.libs.Helper import getCurrenDate
+from common.libs.Helper import getCurrentDate
 import os
 import stat
 import uuid
@@ -23,7 +23,7 @@ class UploadService:
 
         root_path = app.root_path + config_upload['prefix_path']
 
-        file_dir = getCurrenDate("%Y%m%d")
+        file_dir = getCurrentDate("%Y%m%d")
         save_dir = root_path + file_dir
         if not os.path.exists(save_dir):
             os.mkdir(save_dir)
@@ -34,7 +34,7 @@ class UploadService:
 
         model_image = Images()
         model_image.file_key = file_dir + '/' + file_name
-        model_image.created_time = getCurrenDate()
+        model_image.created_time = getCurrentDate()
         db.session.add(model_image)
         db.session.commit()
         resp['data'] = {

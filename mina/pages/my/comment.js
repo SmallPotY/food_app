@@ -2,31 +2,47 @@
 var app = getApp();
 Page({
     data: {
-        "content":"非常愉快的订餐体验~~",
-        "score":10,
-        "order_sn":""
+        "content": "非常愉快的订餐体验~~",
+        "score": 10,
+        "order_sn": ""
     },
     onLoad: function (e) {
-
-    },
-    scoreChange:function( e ){
-        this.setData({
-            "score":e.detail.value
+        var that = this;
+        that.setData({
+            order_sn: e.order_sn
         });
     },
-    doComment:function(){
+    scoreChange: function (e) {
+        this.setData({
+            "score": e.detail.value
+        });
+    },
+    contentBlur: function ( e ) {
+        app.console( e );
+        this.setData({
+            content: e.detail.value
+        });
+    },
+    doComment: function () {
         var that = this;
         wx.request({
             url: app.buildUrl("/my/comment/add"),
             header: app.getRequestHeader(),
+            method: "POST",
+            data: {
+                "content": that.data.content,
+                "score": that.data.score,
+                "order_sn": that.data.order_sn
+            },
             success: function (res) {
                 var resp = res.data;
                 if (resp.code != 200) {
                     app.alert({"content": resp.msg});
                     return;
                 }
-                that.setData({
-                   user_info:resp.data.info
+
+                wx.navigateTo({
+                    url: "/pages/my/commentList"
                 });
             }
         });

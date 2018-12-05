@@ -3,7 +3,7 @@ from flask import Blueprint, render_template, request, jsonify, redirect
 from decimal import Decimal
 from application import app, db
 from common.libs.UrlManager import UrlManager
-from common.libs.Helper import ops_render, getCurrenDate, getDictFilterField
+from common.libs.Helper import ops_render, getCurrentDate, getDictFilterField
 from common.models.food.FoodCat import FoodCat
 from common.models.food.Food import Food
 from common.models.food.FoodStockChangeLog import FoodStockChangeLog
@@ -150,7 +150,7 @@ def set():
     else:
         model_food = Food()
         model_food.status = 1
-        model_food.created_time = getCurrenDate()
+        model_food.created_time = getCurrentDate()
 
     model_food.cat_id = cat_id
     model_food.name = name
@@ -159,7 +159,7 @@ def set():
     model_food.summary = summary
     model_food.stock = stock
     model_food.tags = tags
-    model_food.updated_time = getCurrenDate()
+    model_food.updated_time = getCurrentDate()
     db.session.add(model_food)
     ret = db.session.commit()
 
@@ -216,10 +216,10 @@ def cat_set():
         model_food_cat = food_cat_info
     else:
         model_food_cat = FoodCat()
-        model_food_cat.created_time = getCurrenDate()
+        model_food_cat.created_time = getCurrentDate()
     model_food_cat.name = name
     model_food_cat.weight = weight
-    model_food_cat.updated_time = getCurrenDate()
+    model_food_cat.updated_time = getCurrentDate()
     db.session.add(model_food_cat)
     db.session.commit()
     return jsonify(resp)
@@ -255,7 +255,7 @@ def cat_ops():
     elif act == 'recover':
         food_info.status = 1
 
-    food_info.updated_time = getCurrenDate()
+    food_info.updated_time = getCurrentDate()
     db.session.add(food_info)
     db.session.commit()
 
@@ -290,7 +290,7 @@ def index_ops():
     elif act == "recover":
         food_info.status = 1
 
-    food_info.update_time = getCurrenDate()
+    food_info.update_time = getCurrentDate()
     db.session.add(food_info)
     db.session.commit()
     return jsonify(resp)

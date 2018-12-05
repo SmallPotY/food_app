@@ -1,7 +1,7 @@
 # coding=utf-8
 from application import app, db
 from common.models.member.MemberCart import MemberCart
-from common.libs.Helper import getCurrenDate
+from common.libs.Helper import getCurrentDate
 
 
 class CartService():
@@ -30,11 +30,11 @@ class CartService():
             model_cart = MemberCart()
             model_cart.member_id = member_id
             model_cart.food_id = food_id
-            model_cart.created_time = getCurrenDate()
+            model_cart.created_time = getCurrentDate()
 
         model_cart.food_id = food_id
         model_cart.quantity = number
-        model_cart.updated_time = getCurrenDate()
+        model_cart.updated_time = getCurrentDate()
 
         db.session.add(model_cart)
         db.session.commit()

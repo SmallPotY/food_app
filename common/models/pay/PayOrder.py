@@ -1,8 +1,5 @@
 # coding: utf-8
-from sqlalchemy import BigInteger, Column, DateTime, Index, Integer, Numeric, String, Text
-from sqlalchemy.schema import FetchedValue
 from application import db,app
-
 
 class PayOrder(db.Model):
     __tablename__ = 'pay_order'

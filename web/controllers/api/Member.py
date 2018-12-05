@@ -1,14 +1,15 @@
 # coding=utf-8
 from web.controllers.api import route_api
-from flask import request, jsonify,g
+from flask import request, jsonify, g
 from application import app, db
 import requests
 import json
 from common.models.member.Member import Member
 from common.models.member.OauthMemberBind import OauthMemberBind
-from common.libs.Helper import getCurrenDate
+from common.libs.Helper import getCurrentDate
 from common.libs.member.MemberService import MemberService
 from common.models.WxShareHistory import WxShareHistory
+
 
 @route_api.route("/member/login", methods=['GET', 'POST'])
 def login():
@@ -41,7 +42,7 @@ def login():
         model_member.sex = sex
         model_member.avatar = avatar
         model_member.salt = MemberService.geneSalt()
-        model_member.updated_time = model_member.created_time = getCurrenDate()
+        model_member.updated_time = model_member.created_time = getCurrentDate()
         db.session.add(model_member)
         db.session.commit()
 
@@ -51,15 +52,15 @@ def login():
         model_bind.type = 1
         model_bind.openid = openid
         model_bind.extra = 'NA'
-        model_bind.updated_time = model_member.created_time = getCurrenDate()
+        model_bind.updated_time = model_member.created_time = getCurrentDate()
         db.session.add(model_bind)
         db.session.commit()
 
         bind_info = model_bind
 
     member_info = Member.query.filter_by(id=bind_info.member_id).first()
-    token = "{}#{}".format(MemberService.geneAuthCode(member_info),member_info.id)
-    resp['data'] = {'token':token}
+    token = "{}#{}".format(MemberService.geneAuthCode(member_info), member_info.id)
+    resp['data'] = {'token': token}
     return jsonify(resp)
 
 
@@ -93,14 +94,14 @@ def checkReg():
         resp['msg'] = "未查询导绑定信息"
         return jsonify(resp)
 
-    token = "{}#{}".format(MemberService.geneAuthCode(member_info),member_info.id)
-    resp['data'] = {'token':token}
+    token = "{}#{}".format(MemberService.geneAuthCode(member_info), member_info.id)
+    resp['data'] = {'token': token}
     return jsonify(resp)
 
 
-@route_api.route('/member/share',methods=['POST'])
+@route_api.route('/member/share', methods=['POST'])
 def member_share():
-    resp = {'code':200,'msg':'操作成功','data':{}}
+    resp = {'code': 200, 'msg': '操作成功', 'data': {}}
     req = request.values
 
     url = req['url'] if 'url' in req else ''
@@ -111,7 +112,18 @@ def member_share():
     if member_info:
         model_share.member_id = member_info.id
     model_share.share_url = url
-    model_share.created_time=getCurrenDate()
+    model_share.created_time = getCurrentDate()
     db.session.add(model_share)
     db.session.commit()
+    return jsonify(resp)
+
+
+@route_api.route('/member/info')
+def member_info():
+    resp = {'code': 200, 'msg': '操作成功~', 'data': {}}
+    member_info = g.member_info
+    resp['data']['info'] = {
+        'nickname' : member_info.nickname,
+        'avatar_url':member_info.avatar
+    }
     return jsonify(resp)

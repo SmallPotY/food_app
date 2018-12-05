@@ -1,7 +1,7 @@
 # coding=utf-8
 from common.models.log.AppAccessLog import AppAccessLog
 from common.models.log.AppErrLog import AppErrorLog
-from common.libs.Helper import getCurrenDate
+from common.libs.Helper import getCurrentDate
 from application import app, db
 from flask import request, g
 import json
@@ -21,7 +21,7 @@ class LogService():
         if 'current_user' in g and g.current_user is not None:
             target.uid = g.current_user.uid                         # 用户
         target.ua = request.headers.get("User-Agent")               # 请求头
-        target.created_time = getCurrenDate()                       # 访问时间
+        target.created_time = getCurrentDate()                       # 访问时间
         db.session.add(target)
         db.session.commit()
         return True
@@ -34,7 +34,7 @@ class LogService():
         target.referer_url = request.referrer
         target.query_params = json.dumps(request.values.to_dict())
         target.content = e
-        target.created_time = getCurrenDate()
+        target.created_time = getCurrentDate()
         db.session.add(target)
         db.session.commit()
         return True

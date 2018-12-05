@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from flask import Blueprint, request, redirect, jsonify
-from common.libs.Helper import ops_render, iPagination, getCurrenDate
+from common.libs.Helper import ops_render, iPagination, getCurrentDate
 from common.libs.UrlManager import UrlManager
 from common.models.member.Member import Member
 from application import app, db
@@ -94,7 +94,7 @@ def set():
         resp['code'] = -1
         resp['msg'] = "指定会员不存在"
     member_info.nickname = nickname
-    member_info.updated_time = getCurrenDate()
+    member_info.updated_time = getCurrentDate()
     db.session.add(member_info)
     db.session.commit()
 
@@ -136,7 +136,7 @@ def ops():
     elif act == 'recover':
         member_info.status = 1
 
-    member_info.updated_time = getCurrenDate()
+    member_info.updated_time = getCurrentDate()
     db.session.add(member_info)
     db.session.commit()
 

@@ -1,8 +1,5 @@
 # coding: utf-8
-from sqlalchemy import BigInteger, Column, DateTime, Integer
-from sqlalchemy.schema import FetchedValue
 from application import db
-
 
 class MemberCart(db.Model):
     __tablename__ = 'member_cart'

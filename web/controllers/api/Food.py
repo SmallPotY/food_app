@@ -6,7 +6,7 @@ from application import app, db
 import requests
 import json
 from common.models.member.OauthMemberBind import OauthMemberBind
-from common.libs.Helper import getCurrenDate
+from common.libs.Helper import getCurrentDate
 from common.libs.UrlManager import UrlManager
 from common.models.food.FoodCat import FoodCat
 from common.models.food.Food import Food

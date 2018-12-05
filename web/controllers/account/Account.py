@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from flask import Blueprint, request, redirect, jsonify
-from common.libs.Helper import ops_render, iPagination, getCurrenDate
+from common.libs.Helper import ops_render, iPagination, getCurrentDate
 from common.libs.UrlManager import UrlManager
 from common.libs.user.UserService import UserService
 from common.models.User import User
@@ -146,7 +146,7 @@ def set():
         model_user = user_info
     else:
         model_user = User()
-        model_user.created_time = getCurrenDate()
+        model_user.created_time = getCurrentDate()
         model_user.login_salt = UserService.geneSalt()
 
     model_user.nickname = nickname
@@ -155,7 +155,7 @@ def set():
     model_user.login_name = login_name
     if login_pwd != default_pdw:
         model_user.login_pwd = UserService.genePwd(login_pwd, model_user.login_salt)
-    model_user.updated_time = getCurrenDate()
+    model_user.updated_time = getCurrentDate()
 
     db.session.add(model_user)
     db.session.commit()
@@ -189,7 +189,7 @@ def ops():
     elif act == "recover":
         user_info.status = 1
 
-    user_info.update_time = getCurrenDate()
+    user_info.update_time = getCurrentDate()
     db.session.add(user_info)
     db.session.commit()
     return jsonify(resp)
