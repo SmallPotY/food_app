@@ -16,6 +16,7 @@ route_food = Blueprint('food_page', __name__)
 
 @route_food.route("/index")
 def index():
+
     resp = {}
     req = request.values
 
